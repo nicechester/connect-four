@@ -6,6 +6,7 @@ let gameOver = false;
 let gameMode = 'pvp'; // 'pvp' or 'pve'
 let aiDifficulty = 'medium'; // 'easy', 'medium', 'hard'
 let aiThinking = false;
+let aiThinkingInterval = null;
 
 const boardElement = document.getElementById('game-board');
 const statusElement = document.getElementById('status');
@@ -78,18 +79,30 @@ function handleMove(col) {
     console.log(`[LOG] Turn switched. New currentPlayer=${currentPlayer}`);
     
     if (gameMode === 'pve' && currentPlayer === 'yellow' && !gameOver) {
-        statusElement.innerText = `AI is thinking...`;
         aiThinking = true;
-        console.log(`[LOG] AI turn triggered. Setting aiThinking=true. Scheduling makeAIMove via setTimeout.`);
+        let dotCount = 1;
+        statusElement.innerText = `AI is thinking.`;
+        console.log(`[LOG] AI turn triggered. Setting aiThinking=true. Starting thinking animation interval.`);
+        
+        if (aiThinkingInterval) clearInterval(aiThinkingInterval);
+        aiThinkingInterval = setInterval(() => {
+            dotCount = (dotCount % 3) + 1;
+            statusElement.innerText = `AI is thinking` + '.'.repeat(dotCount);
+        }, 400);
+
         setTimeout(() => {
             console.log(`[LOG] setTimeout fired for AI move. Calling makeAIMove()...`);
             makeAIMove();
             aiThinking = false;
+            if (aiThinkingInterval) {
+                clearInterval(aiThinkingInterval);
+                aiThinkingInterval = null;
+            }
             console.log(`[LOG] AI move completed. aiThinking reset to false.`);
             if (!gameOver) {
                 updateStatusText();
             }
-        }, 300);
+        }, 100);
     } else {
         updateStatusText();
     }
@@ -374,6 +387,10 @@ function resetGame() {
     currentPlayer = 'red';
     gameOver = false;
     aiThinking = false;
+    if (aiThinkingInterval) {
+        clearInterval(aiThinkingInterval);
+        aiThinkingInterval = null;
+    }
     updateStatusText();
     updateBoard();
 }
