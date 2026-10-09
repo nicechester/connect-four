@@ -17,6 +17,27 @@ body {
     cursor: pointer;
 }
 
+#player-names-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    font-size: 14px;
+}
+
+.name-inputs {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.name-inputs input {
+    padding: 4px 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
 #game-board {
     display: grid;
     grid-template-columns: repeat(7, 50px);

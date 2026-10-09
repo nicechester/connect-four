@@ -8,14 +8,26 @@ let aiDifficulty = 'medium'; // 'easy', 'medium', 'hard'
 let aiThinking = false;
 let aiThinkingInterval = null;
 
+let player1Name = 'Player 1';
+let player2Name = 'Player 2';
+
 const boardElement = document.getElementById('game-board');
 const statusElement = document.getElementById('status');
 const difficultyContainer = document.getElementById('ai-difficulty-container');
+const pvpNamesContainer = document.getElementById('pvp-names');
+const pveNamesContainer = document.getElementById('pve-names');
 
 function setGameMode(mode) {
     console.log(`[LOG] setGameMode: ${mode}`);
     gameMode = mode;
     difficultyContainer.style.display = mode === 'pve' ? 'inline-block' : 'none';
+    if (mode === 'pve') {
+        pvpNamesContainer.style.display = 'none';
+        pveNamesContainer.style.display = 'flex';
+    } else {
+        pvpNamesContainer.style.display = 'flex';
+        pveNamesContainer.style.display = 'none';
+    }
     resetGame();
 }
 
@@ -23,6 +35,21 @@ function setDifficulty() {
     aiDifficulty = document.getElementById('ai-difficulty').value;
     console.log(`[LOG] setDifficulty: ${aiDifficulty}`);
     resetGame();
+}
+
+function savePlayerNames() {
+    if (gameMode === 'pvp') {
+        const p1Input = document.getElementById('player1-name').value.trim();
+        const p2Input = document.getElementById('player2-name').value.trim();
+        if (p1Input) player1Name = p1Input;
+        if (p2Input) player2Name = p2Input;
+    } else {
+        const pInput = document.getElementById('player-single-name').value.trim();
+        if (pInput) player1Name = pInput;
+        player2Name = 'AI';
+    }
+    console.log(`[LOG] Names updated: Player 1 = ${player1Name}, Player 2 = ${player2Name}`);
+    updateStatusText();
 }
 
 function createBoard() {
@@ -62,8 +89,9 @@ function handleMove(col) {
     updateBoard();
 
     if (checkWinBoard(board, r, col, currentPlayer)) {
-        statusElement.innerText = gameMode === 'pve' && currentPlayer === 'yellow' ? `AI Wins!` : `${currentPlayer.toUpperCase()} Wins!`;
-        console.log(`[LOG] Win detected for ${currentPlayer}! Game over.`);
+        const winnerName = currentPlayer === 'red' ? player1Name : player2Name;
+        statusElement.innerText = `${winnerName} Wins!`;
+        console.log(`[LOG] Win detected for ${winnerName}! Game over.`);
         gameOver = true;
         return;
     }
@@ -81,13 +109,13 @@ function handleMove(col) {
     if (gameMode === 'pve' && currentPlayer === 'yellow' && !gameOver) {
         aiThinking = true;
         let dotCount = 1;
-        statusElement.innerText = `AI is thinking.`;
+        statusElement.innerText = `${player2Name} is thinking.`;
         console.log(`[LOG] AI turn triggered. Setting aiThinking=true. Starting thinking animation interval.`);
         
         if (aiThinkingInterval) clearInterval(aiThinkingInterval);
         aiThinkingInterval = setInterval(() => {
             dotCount = (dotCount % 3) + 1;
-            statusElement.innerText = `AI is thinking` + '.'.repeat(dotCount);
+            statusElement.innerText = `${player2Name} is thinking` + '.'.repeat(dotCount);
         }, 400);
 
         setTimeout(() => {
@@ -123,11 +151,8 @@ function isBoardFull(currentBoard) {
 }
 
 function updateStatusText() {
-    if (gameMode === 'pve') {
-        statusElement.innerText = currentPlayer === 'red' ? "Your Turn (Red)" : "AI's Turn (Yellow)";
-    } else {
-        statusElement.innerText = `Player ${currentPlayer === 'red' ? '1' : '2'}'s Turn (${currentPlayer})`;
-    }
+    const activeName = currentPlayer === 'red' ? player1Name : player2Name;
+    statusElement.innerText = `${activeName}'s Turn (${currentPlayer === 'red' ? 'Red' : 'Yellow'})`;
     console.log(`[LOG] updateStatusText: "${statusElement.innerText}"`);
 }
 
@@ -166,7 +191,7 @@ function executeAIMove(col) {
     updateBoard();
 
     if (checkWinBoard(board, r, col, currentPlayer)) {
-        statusElement.innerText = `AI Wins!`;
+        statusElement.innerText = `${player2Name} Wins!`;
         console.log(`[LOG] Win detected for AI! Game over.`);
         gameOver = true;
         return;
@@ -383,6 +408,18 @@ function updateBoard() {
 
 function resetGame() {
     console.log(`[LOG] resetGame called`);
+    // Re-read player names in case inputs changed without explicit button click, or keep current saved names
+    if (gameMode === 'pvp') {
+        const p1Input = document.getElementById('player1-name').value.trim();
+        const p2Input = document.getElementById('player2-name').value.trim();
+        if (p1Input) player1Name = p1Input;
+        if (p2Input) player2Name = p2Input;
+    } else {
+        const pInput = document.getElementById('player-single-name').value.trim();
+        if (pInput) player1Name = pInput;
+        player2Name = 'AI';
+    }
+
     board = Array(rows).fill().map(() => Array(cols).fill(null));
     currentPlayer = 'red';
     gameOver = false;
@@ -396,3 +433,4 @@ function resetGame() {
 }
 
 createBoard();
+updateStatusText();

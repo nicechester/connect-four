@@ -24,6 +24,17 @@
             </select>
         </div>
     </div>
+    <div id="player-names-container">
+        <div id="pvp-names" class="name-inputs">
+            <label>Player 1 (Red): <input type="text" id="player1-name" value="Player 1" /></label>
+            <label>Player 2 (Yellow): <input type="text" id="player2-name" value="Player 2" /></label>
+            <button onclick="savePlayerNames()">Set Names</button>
+        </div>
+        <div id="pve-names" class="name-inputs" style="display: none;">
+            <label>Player (Red): <input type="text" id="player-single-name" value="Player 1" /></label>
+            <button onclick="savePlayerNames()">Set Name</button>
+        </div>
+    </div>
     <div id="game-board"></div>
     <div id="status">Player 1's Turn (Red)</div>
     <button onclick="resetGame()">Reset Game</button>
