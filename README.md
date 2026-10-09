@@ -2,6 +2,8 @@
 
 A classic Connect Four web game built with vanilla JavaScript, HTML, and CSS, featuring Player vs Player and Player vs AI (with Minimax algorithm and difficulty levels).
 
+> *Note: This project was created to test Code Shellie (codesh) capability.*
+
 🌐 **Play Live:** [https://nicechester.github.io/connect-four/](https://nicechester.github.io/connect-four/)
 
 ---
