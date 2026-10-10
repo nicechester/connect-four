@@ -1,0 +1,8 @@
+@keyframes drop {
+    0% { transform: translateY(-300px); }
+    100% { transform: translateY(0); }
+}
+
+.cell.dropping {
+    animation: drop 0.5s ease-out;
+}
