@@ -1,3 +1,47 @@
+/* General Styles */
+body {
+    font-family: sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+}
+
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(7, 60px);
+    grid-template-rows: repeat(6, 60px);
+    gap: 5px;
+    background-color: #007bff;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 20px auto;
+    width: fit-content;
+}
+
+.cell {
+    width: 60px;
+    height: 60px;
+    background-color: white;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.cell.red {
+    background-color: red;
+}
+
+.cell.yellow {
+    background-color: yellow;
+}
+
+/* Screen Management */
+.screen {
+    display: none;
+}
+
+.screen.active {
+    display: block;
+}
+
 /* Modal / Pop-up Styles */
 .modal {
     display: none;
@@ -8,12 +52,11 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    /* Removed justify-content/align-items to allow absolute positioning of modal-content */
     animation: fadeIn 0.3s ease-in-out;
 }
 
 .modal.active {
-    display: block; /* Changed to block to allow absolute positioning of children */
+    display: block;
 }
 
 .modal-content {
@@ -31,7 +74,6 @@
     cursor: grab;
     position: absolute;
     user-select: none;
-    /* Center initially */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
