@@ -171,7 +171,7 @@ function handleMove(col) {
     }
 
     board[r][col] = currentPlayer;
-    updateBoard();
+    updateBoard(r, col);
 
     if (checkWinBoard(board, r, col, currentPlayer)) {
         const winnerName = currentPlayer === 'red' ? player1Name : player2Name;
@@ -280,7 +280,7 @@ function executeAIMove(col) {
     }
 
     board[r][col] = currentPlayer;
-    updateBoard();
+    updateBoard(r, col);
 
     if (checkWinBoard(board, r, col, currentPlayer)) {
         statusElement.innerText = `${player2Name} Wins!`;
@@ -490,13 +490,22 @@ function evaluateWindow(window, player) {
     return score;
 }
 
-function updateBoard() {
+function updateBoard(targetR, targetC) {
     const cells = document.querySelectorAll('.cell');
     cells.forEach(cell => {
-        const r = cell.dataset.row;
-        const c = cell.dataset.col;
-        cell.className = 'cell';
-        if (board[r][c]) cell.classList.add(board[r][c]);
+        const r = parseInt(cell.dataset.row);
+        const c = parseInt(cell.dataset.col);
+        
+        // Remove existing classes
+        cell.classList.remove('red', 'yellow', 'dropping');
+        
+        // Apply current state
+        if (board[r][c]) {
+            cell.classList.add(board[r][c]);
+            if (r === targetR && c === targetC) {
+                cell.classList.add('dropping');
+            }
+        }
     });
 }
 
@@ -513,7 +522,6 @@ function resetGame() {
         player2Name = 'AI';
     }
 
-    board = Array(rows).fill().page = Array(cols).fill(null); // safely reset board
     board = Array(rows).fill().map(() => Array(cols).fill(null));
     currentPlayer = 'red';
     gameOver = false;
