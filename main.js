@@ -47,6 +47,7 @@ export function savePlayerNames() {
 }
 
 export function startGame() {
+    savePlayerNames();
     mainMenuElement.classList.remove('active');
     gameScreenElement.classList.add('active');
     resetGame();
@@ -123,7 +124,7 @@ function triggerAIMove() {
 
     setTimeout(() => {
         makeAIMove();
-        aiThinking = false;
+        // aiThinking = false; // Moved to makeAIMove
         if (aiThinkingInterval) {
             clearInterval(aiThinkingInterval);
             aiThinkingInterval = null;
@@ -154,6 +155,7 @@ function makeAIMove() {
             bestCol = col;
         }
     }
+    aiThinking = false;
     handleMove(bestCol);
 }
 
