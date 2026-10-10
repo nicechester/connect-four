@@ -8,36 +8,61 @@
 </head>
 <body>
     <h1>Connect Four</h1>
-    <div id="game-modes">
-        <label>
-            <input type="radio" name="gameMode" value="pvp" checked onchange="setGameMode('pvp')"> Player vs Player
-        </label>
-        <label>
-            <input type="radio" name="gameMode" value="pve" onchange="setGameMode('pve')"> Player vs AI
-        </label>
-        <div id="ai-difficulty-container" style="display: none; margin-left: 15px; display: inline-block;">
-            <label for="ai-difficulty">Difficulty:</label>
-            <select id="ai-difficulty" onchange="setDifficulty()">
-                <option value="easy">Easy</option>
-                <option value="medium" selected>Medium</option>
-                <option value="hard">Hard</option>
-            </select>
+
+    <!-- Entry Screen / Main Menu -->
+    <div id="main-menu" class="screen active">
+        <div id="game-modes">
+            <label>
+                <input type="radio" name="gameMode" value="pvp" checked onchange="setGameMode('pvp')"> Player vs Player
+            </label>
+            <label>
+                <input type="radio" name="gameMode" value="pve" onchange="setGameMode('pve')"> Player vs AI
+            </label>
+            <div id="ai-difficulty-container" style="display: none; margin-left: 15px; display: inline-block;">
+                <label for="ai-difficulty">Difficulty:</label>
+                <select id="ai-difficulty" onchange="setDifficulty()">
+                    <option value="easy">Easy</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
+        </div>
+        <div id="player-names-container">
+            <div id="pvp-names" class="name-inputs">
+                <label>Player 1 (Red): <input type="text" id="player1-name" value="Player 1" /></label>
+                <label>Player 2 (Yellow): <input type="text" id="player2-name" value="Player 2" /></label>
+                <button onclick="savePlayerNames()">Set Names</button>
+            </div>
+            <div id="pve-names" class="name-inputs" style="display: none;">
+                <label>Player (Red): <input type="text" id="player-single-name" value="Player 1" /></label>
+                <button onclick="savePlayerNames()">Set Name</button>
+            </div>
+        </div>
+        <button id="start-game-btn" onclick="startGame()">Start Game</button>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+        <div id="game-board"></div>
+        <div id="status">Player 1's Turn (Red)</div>
+        <div class="game-actions">
+            <button onclick="resetGame()">Reset Game</button>
+            <button onclick="returnToMain()">Return to Main</button>
         </div>
     </div>
-    <div id="player-names-container">
-        <div id="pvp-names" class="name-inputs">
-            <label>Player 1 (Red): <input type="text" id="player1-name" value="Player 1" /></label>
-            <label>Player 2 (Yellow): <input type="text" id="player2-name" value="Player 2" /></label>
-            <button onclick="savePlayerNames()">Set Names</button>
-        </div>
-        <div id="pve-names" class="name-inputs" style="display: none;">
-            <label>Player (Red): <input type="text" id="player-single-name" value="Player 1" /></label>
-            <button onclick="savePlayerNames()">Set Name</button>
+
+    <!-- Game Result Pop-up Modal -->
+    <div id="result-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="result-title">Game Over</h2>
+            <p id="result-message"></p>
+            <div class="modal-buttons">
+                <button onclick="playAgain()">Play Again</button>
+                <button onclick="returnToMainFromModal()">Return to Main</button>
+            </div>
         </div>
     </div>
-    <div id="game-board"></div>
-    <div id="status">Player 1's Turn (Red)</div>
-    <button onclick="resetGame()">Reset Game</button>
+
     <script src="script.js"></script>
 </body>
 </html>

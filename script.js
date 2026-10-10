@@ -16,6 +16,10 @@ const statusElement = document.getElementById('status');
 const difficultyContainer = document.getElementById('ai-difficulty-container');
 const pvpNamesContainer = document.getElementById('pvp-names');
 const pveNamesContainer = document.getElementById('pve-names');
+const mainMenuElement = document.getElementById('main-menu');
+const gameScreenElement = document.getElementById('game-screen');
+const resultModalElement = document.getElementById('result-modal');
+const resultMessageElement = document.getElementById('result-message');
 
 // Cookie helper functions
 function setCookie(name, value, days = 30) {
@@ -70,13 +74,11 @@ function setGameMode(mode) {
         pvpNamesContainer.style.display = 'flex';
         pveNamesContainer.style.display = 'none';
     }
-    resetGame();
 }
 
 function setDifficulty() {
     aiDifficulty = document.getElementById('ai-difficulty').value;
     console.log(`[LOG] setDifficulty: ${aiDifficulty}`);
-    resetGame();
 }
 
 function savePlayerNames() {
@@ -101,7 +103,38 @@ function savePlayerNames() {
         player2Name = 'AI';
     }
     console.log(`[LOG] Names updated and saved to cookies: Player 1 = ${player1Name}, Player 2 = ${player2Name}`);
-    updateStatusText();
+}
+
+function startGame() {
+    console.log(`[LOG] startGame called`);
+    savePlayerNames();
+    mainMenuElement.classList.remove('active');
+    gameScreenElement.classList.add('active');
+    resultModalElement.classList.remove('active');
+    resetGame();
+}
+
+function returnToMain() {
+    console.log(`[LOG] returnToMain called`);
+    if (aiThinkingInterval) {
+        clearInterval(aiThinkingInterval);
+        aiThinkingInterval = null;
+    }
+    gameScreenElement.classList.remove('active');
+    resultModalElement.classList.remove('active');
+    mainMenuElement.classList.add('active');
+}
+
+function returnToMainFromModal() {
+    console.log(`[LOG] returnToMainFromModal called`);
+    resultModalElement.classList.remove('active');
+    returnToMain();
+}
+
+function playAgain() {
+    console.log(`[LOG] playAgain called`);
+    resultModalElement.classList.remove('active');
+    resetGame();
 }
 
 function createBoard() {
@@ -145,6 +178,7 @@ function handleMove(col) {
         statusElement.innerText = `${winnerName} Wins!`;
         console.log(`[LOG] Win detected for ${winnerName}! Game over.`);
         gameOver = true;
+        showResultModal(`${winnerName} Wins!`);
         return;
     }
 
@@ -152,6 +186,7 @@ function handleMove(col) {
         statusElement.innerText = "It's a Draw!";
         console.log(`[LOG] Board is full. It's a draw!`);
         gameOver = true;
+        showResultModal("It's a Draw!");
         return;
     }
 
@@ -187,6 +222,11 @@ function handleMove(col) {
         updateStatusText();
     }
     console.log(`[LOG] handleMove end`);
+}
+
+function showResultModal(message) {
+    resultMessageElement.innerText = message;
+    resultModalElement.classList.add('active');
 }
 
 function getAvailableRow(currentBoard, col) {
@@ -246,6 +286,7 @@ function executeAIMove(col) {
         statusElement.innerText = `${player2Name} Wins!`;
         console.log(`[LOG] Win detected for AI! Game over.`);
         gameOver = true;
+        showResultModal(`${player2Name} Wins!`);
         return;
     }
 
@@ -253,6 +294,7 @@ function executeAIMove(col) {
         statusElement.innerText = "It's a Draw!";
         console.log(`[LOG] Board is full. It's a draw!`);
         gameOver = true;
+        showResultModal("It's a Draw!");
         return;
     }
 
@@ -460,7 +502,6 @@ function updateBoard() {
 
 function resetGame() {
     console.log(`[LOG] resetGame called`);
-    // Re-read player names in case inputs changed without explicit button click, or keep current saved names
     if (gameMode === 'pvp') {
         const p1Input = document.getElementById('player1-name').value.trim();
         const p2Input = document.getElementById('player2-name').value.trim();
@@ -472,6 +513,7 @@ function resetGame() {
         player2Name = 'AI';
     }
 
+    board = Array(rows).fill().page = Array(cols).fill(null); // safely reset board
     board = Array(rows).fill().map(() => Array(cols).fill(null));
     currentPlayer = 'red';
     gameOver = false;
