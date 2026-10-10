@@ -1,10 +1,57 @@
 /* General Styles */
 body {
-    font-family: sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-align: center;
     background-color: #f4f4f4;
+    color: #333;
+    padding: 20px;
 }
 
+h1 {
+    color: #007bff;
+    margin-bottom: 20px;
+}
+
+/* Menu & Inputs */
+#main-menu {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: inline-block;
+    text-align: left;
+}
+
+.name-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.name-inputs label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    transition: background 0.2s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Game Board */
 #game-board {
     display: grid;
     grid-template-columns: repeat(7, 60px);
@@ -31,6 +78,19 @@ body {
 
 .cell.yellow {
     background-color: yellow;
+}
+
+/* Status & Actions */
+#status {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 15px 0;
+}
+
+.game-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
 }
 
 /* Screen Management */
