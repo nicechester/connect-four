@@ -19,7 +19,42 @@ const pveNamesContainer = document.getElementById('pve-names');
 const mainMenuElement = document.getElementById('main-menu');
 const gameScreenElement = document.getElementById('game-screen');
 const resultModalElement = document.getElementById('result-modal');
+const resultModalContent = resultModalElement.querySelector('.modal-content');
 const resultMessageElement = document.getElementById('result-message');
+
+// Draggable Modal Logic
+let isDragging = false;
+let offsetX, offsetY;
+
+resultModalContent.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    offsetX = e.clientX - resultModalContent.offsetLeft;
+    offsetY = e.clientY - resultModalContent.offsetTop;
+    resultModalContent.style.cursor = 'grabbing';
+});
+
+document.addEventListener('mousemove', (e) => {
+    if (isDragging) {
+        let x = e.clientX - offsetX;
+        let y = e.clientY - offsetY;
+
+        // Keep within viewport
+        const maxX = window.innerWidth - resultModalContent.offsetWidth;
+        const maxY = window.innerHeight - resultModalContent.offsetHeight;
+
+        x = Math.max(0, Math.min(x, maxX));
+        y = Math.max(0, Math.min(y, maxY));
+
+        resultModalContent.style.left = x + 'px';
+        resultModalContent.style.top = y + 'px';
+        resultModalContent.style.margin = '0'; // Remove default margin to allow absolute positioning
+    }
+});
+
+document.addEventListener('mouseup', () => {
+    isDragging = false;
+    resultModalContent.style.cursor = 'grab';
+});
 
 // Cookie helper functions
 function setCookie(name, value, days = 30) {
@@ -228,6 +263,10 @@ function handleMove(col) {
 function showResultModal(message) {
     resultMessageElement.innerText = message;
     resultModalElement.classList.add('active');
+    // Reset position
+    resultModalContent.style.left = '';
+    resultModalContent.style.top = '';
+    resultModalContent.style.margin = '';
 }
 
 function getAvailableRow(currentBoard, col) {
