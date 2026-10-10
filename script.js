@@ -17,6 +17,48 @@ const difficultyContainer = document.getElementById('ai-difficulty-container');
 const pvpNamesContainer = document.getElementById('pvp-names');
 const pveNamesContainer = document.getElementById('pve-names');
 
+// Cookie helper functions
+function setCookie(name, value, days = 30) {
+    const d = new Date();
+    d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+    let expires = "expires=" + d.toUTCString();
+    document.cookie = name + "=" + encodeURIComponent(value) + ";" + expires + ";path=/";
+}
+
+function getCookie(name) {
+    let nameEQ = name + "=";
+    let ca = document.cookie.split(';');
+    for(let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
+    }
+    return null;
+}
+
+// Load saved names from cookies on startup
+function loadSavedNames() {
+    const savedP1 = getCookie('connectFour_player1Name');
+    const savedP2 = getCookie('connectFour_player2Name');
+    const savedSingle = getCookie('connectFour_playerSingleName');
+
+    if (savedP1) {
+        player1Name = savedP1;
+        const p1Input = document.getElementById('player1-name');
+        if (p1Input) p1Input.value = savedP1;
+    }
+    if (savedP2) {
+        player2Name = savedP2;
+        const p2Input = document.getElementById('player2-name');
+        if (p2Input) p2Input.value = savedP2;
+    }
+    if (savedSingle) {
+        const singleInput = document.getElementById('player-single-name');
+        if (singleInput) singleInput.value = savedSingle;
+        if (!savedP1) player1Name = savedSingle;
+    }
+}
+
 function setGameMode(mode) {
     console.log(`[LOG] setGameMode: ${mode}`);
     gameMode = mode;
@@ -41,14 +83,24 @@ function savePlayerNames() {
     if (gameMode === 'pvp') {
         const p1Input = document.getElementById('player1-name').value.trim();
         const p2Input = document.getElementById('player2-name').value.trim();
-        if (p1Input) player1Name = p1Input;
-        if (p2Input) player2Name = p2Input;
+        if (p1Input) {
+            player1Name = p1Input;
+            setCookie('connectFour_player1Name', p1Input);
+        }
+        if (p2Input) {
+            player2Name = p2Input;
+            setCookie('connectFour_player2Name', p2Input);
+        }
     } else {
         const pInput = document.getElementById('player-single-name').value.trim();
-        if (pInput) player1Name = pInput;
+        if (pInput) {
+            player1Name = pInput;
+            setCookie('connectFour_playerSingleName', pInput);
+            setCookie('connectFour_player1Name', pInput);
+        }
         player2Name = 'AI';
     }
-    console.log(`[LOG] Names updated: Player 1 = ${player1Name}, Player 2 = ${player2Name}`);
+    console.log(`[LOG] Names updated and saved to cookies: Player 1 = ${player1Name}, Player 2 = ${player2Name}`);
     updateStatusText();
 }
 
@@ -432,5 +484,6 @@ function resetGame() {
     updateBoard();
 }
 
+loadSavedNames();
 createBoard();
 updateStatusText();
