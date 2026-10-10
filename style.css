@@ -8,13 +8,12 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
+    /* Removed justify-content/align-items to allow absolute positioning of modal-content */
     animation: fadeIn 0.3s ease-in-out;
 }
 
 .modal.active {
-    display: flex;
+    display: block; /* Changed to block to allow absolute positioning of children */
 }
 
 .modal-content {
@@ -32,6 +31,10 @@
     cursor: grab;
     position: absolute;
     user-select: none;
+    /* Center initially */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .modal-content:active {

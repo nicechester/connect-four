@@ -28,9 +28,13 @@ let offsetX, offsetY;
 
 resultModalContent.addEventListener('mousedown', (e) => {
     isDragging = true;
-    offsetX = e.clientX - resultModalContent.offsetLeft;
-    offsetY = e.clientY - resultModalContent.offsetTop;
+    // Calculate offset relative to the element's current position
+    const rect = resultModalContent.getBoundingClientRect();
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
     resultModalContent.style.cursor = 'grabbing';
+    // Remove transform to allow absolute positioning based on left/top
+    resultModalContent.style.transform = 'none';
 });
 
 document.addEventListener('mousemove', (e) => {
@@ -47,13 +51,14 @@ document.addEventListener('mousemove', (e) => {
 
         resultModalContent.style.left = x + 'px';
         resultModalContent.style.top = y + 'px';
-        resultModalContent.style.margin = '0'; // Remove default margin to allow absolute positioning
     }
 });
 
 document.addEventListener('mouseup', () => {
-    isDragging = false;
-    resultModalContent.style.cursor = 'grab';
+    if (isDragging) {
+        isDragging = false;
+        resultModalContent.style.cursor = 'grab';
+    }
 });
 
 // Cookie helper functions
@@ -264,9 +269,9 @@ function showResultModal(message) {
     resultMessageElement.innerText = message;
     resultModalElement.classList.add('active');
     // Reset position
-    resultModalContent.style.left = '';
-    resultModalContent.style.top = '';
-    resultModalContent.style.margin = '';
+    resultModalContent.style.left = '50%';
+    resultModalContent.style.top = '50%';
+    resultModalContent.style.transform = 'translate(-50%, -50%)';
 }
 
 function getAvailableRow(currentBoard, col) {
@@ -486,7 +491,7 @@ function scoreBoard(currentBoard, player) {
         for (let c = 0; c < cols; c++) {
             // Horizontal
             if (c <= cols - 4) {
-                let window = [currentBoard[r][c], currentBoard[r][c+1], currentBoard[r][c+2], currentBoard[r][c+3]];
+                let window = [currentBoard[r][c], currentBoard[r][c+1], currentBoard[r][c+1], currentBoard[r][c+3]];
                 score += evaluateWindow(window, player);
             }
             // Vertical
