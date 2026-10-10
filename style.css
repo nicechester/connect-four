@@ -1,105 +1,110 @@
-/* General Styles */
+/* General Layout */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: sans-serif;
+    gap: 15px;
+    margin-top: 40px;
     background-color: #f4f4f4;
-    color: #333;
-    padding: 20px;
 }
 
-h1 {
-    color: #007bff;
-    margin-bottom: 20px;
+.screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
 }
 
-/* Menu & Inputs */
+.screen.active {
+    display: flex;
+}
+
 #main-menu {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
+    gap: 25px;
+    padding: 30px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+#start-game-btn {
+    padding: 16px 40px;
+    font-size: 24px;
+    font-weight: bold;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    display: inline-block;
-    text-align: left;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+#start-game-btn:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+#game-modes {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 16px;
+}
+
+#player-names-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    font-size: 14px;
 }
 
 .name-inputs {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin: 20px 0;
-}
-
-.name-inputs label {
-    display: flex;
-    justify-content: space-between;
+    gap: 15px;
     align-items: center;
-    gap: 10px;
 }
 
-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    background-color: #007bff;
-    color: white;
-    transition: background 0.2s;
+.name-inputs input {
+    padding: 6px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
-button:hover {
-    background-color: #0056b3;
-}
-
-/* Game Board */
 #game-board {
     display: grid;
-    grid-template-columns: repeat(7, 60px);
-    grid-template-rows: repeat(6, 60px);
+    grid-template-columns: repeat(7, 50px);
+    grid-template-rows: repeat(6, 50px);
     gap: 5px;
-    background-color: #007bff;
+    background-color: #333;
     padding: 10px;
     border-radius: 10px;
-    margin: 20px auto;
-    width: fit-content;
 }
 
 .cell {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     background-color: white;
     border-radius: 50%;
     cursor: pointer;
 }
 
-.cell.red {
-    background-color: red;
-}
+.cell.red { background-color: red; }
+.cell.yellow { background-color: yellow; }
 
-.cell.yellow {
-    background-color: yellow;
-}
-
-/* Status & Actions */
-#status {
-    font-size: 20px;
-    font-weight: bold;
-    margin: 15px 0;
+button {
+    padding: 8px 16px;
+    font-size: 16px;
+    cursor: pointer;
 }
 
 .game-actions {
     display: flex;
-    justify-content: center;
-    gap: 10px;
-}
-
-/* Screen Management */
-.screen {
-    display: none;
-}
-
-.screen.active {
-    display: block;
+    gap: 15px;
 }
 
 /* Modal / Pop-up Styles */
