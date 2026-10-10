@@ -182,7 +182,7 @@ function handleMove(col) {
             if (!gameOver) {
                 updateStatusText();
             }
-        }, 100);
+        }, 800);
     } else {
         updateStatusText();
     }
