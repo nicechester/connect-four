@@ -2,7 +2,7 @@
 
 A classic Connect Four web game built with vanilla JavaScript, HTML, and CSS, featuring Player vs Player and Player vs AI (with Minimax algorithm and difficulty levels).
 
-> *Note: This project was created to test Code Shellie (codesh) capability.*
+> *Note: This project was created to test [Code Shellie](https://github.com/nicechester/code-shellie) (codesh) capability.*
 
 🌐 **Play Live:** [https://nicechester.github.io/connect-four/](https://nicechester.github.io/connect-four/)
 
@@ -16,7 +16,7 @@ A classic Connect Four web game built with vanilla JavaScript, HTML, and CSS, fe
 - **AI Difficulties:**
   - **Easy:** Random moves.
   - **Medium:** Smart heuristics and depth-2 search.
-  - **Hard:** Minimax with Alpha-Beta Pruning (depth-4 search).
+- **Hard:** Minimax with Alpha-Beta Pruning (depth-4 search).
 - **AI Thinking Animation:** Dynamic animated thinking indicator (`AI is thinking.`, `AI is thinking..`, `AI is thinking...`) while the AI computes its move.
 - **Responsive & Clean UI:** Clean grid layout with smooth cell animations.
 
