@@ -1,7 +1,7 @@
 // Simple sound effect generator using Web Audio API
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-function playDropSound() {
+export function playDropSound() {
     const oscillator = audioCtx.createOscillator();
     const gainNode = audioCtx.createGain();
 

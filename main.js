@@ -23,8 +23,59 @@ const resultModalElement = document.getElementById('result-modal');
 const resultModalContent = resultModalElement.querySelector('.modal-content');
 const resultMessageElement = document.getElementById('result-message');
 
-// ... (Cookie functions and Draggable Modal Logic from original script.js)
-// I will keep these here for now as they are UI-related but specific to this app's state
+// --- Game Logic ---
+
+export function setGameMode(mode) {
+    gameMode = mode;
+    difficultyContainer.style.display = mode === 'pve' ? 'inline-block' : 'none';
+    pvpNamesContainer.style.display = mode === 'pvp' ? 'block' : 'none';
+    pveNamesContainer.style.display = mode === 'pve' ? 'block' : 'none';
+}
+
+export function setDifficulty() {
+    aiDifficulty = document.getElementById('ai-difficulty').value;
+}
+
+export function savePlayerNames() {
+    if (gameMode === 'pvp') {
+        player1Name = document.getElementById('player1-name').value;
+        player2Name = document.getElementById('player2-name').value;
+    } else {
+        player1Name = document.getElementById('player-single-name').value;
+        player2Name = 'AI';
+    }
+}
+
+export function startGame() {
+    mainMenuElement.classList.remove('active');
+    gameScreenElement.classList.add('active');
+    resetGame();
+}
+
+export function resetGame() {
+    board = Game.createEmptyBoard();
+    currentPlayer = 'red';
+    gameOver = false;
+    UI.createBoardUI(boardElement, Game.rows, Game.cols, handleMove);
+    updateStatusText();
+    resultModalElement.classList.remove('active');
+}
+
+export function returnToMain() {
+    gameScreenElement.classList.remove('active');
+    mainMenuElement.classList.add('active');
+}
+
+export function returnToMainFromModal() {
+    resultModalElement.classList.remove('active');
+    returnToMain();
+}
+
+export function playAgain() {
+    resetGame();
+}
+
+// --- Move Handling ---
 
 function handleMove(col) {
     if (gameOver || aiThinking) return;
@@ -86,8 +137,70 @@ function updateStatusText() {
     UI.updateStatusText(statusElement, `${activeName}'s Turn (${currentPlayer === 'red' ? 'Red' : 'Yellow'})`);
 }
 
-// ... (Minimax and AI logic would go here, calling Game functions)
-// I'll keep the AI logic in main.js for now as it orchestrates the game flow.
+// --- AI Logic ---
 
-// ... (Initialization)
+function makeAIMove() {
+    const validCols = Game.getValidColumns(board);
+    let bestCol = validCols[0];
+    let bestScore = -Infinity;
+
+    for (let col of validCols) {
+        const r = Game.getAvailableRow(board, col);
+        board[r][col] = 'yellow';
+        let score = minimax(board, 5, -Infinity, Infinity, false);
+        board[r][col] = null;
+        if (score > bestScore) {
+            bestScore = score;
+            bestCol = col;
+        }
+    }
+    handleMove(bestCol);
+}
+
+function minimax(board, depth, alpha, beta, maximizingPlayer) {
+    if (depth === 0 || Game.checkWinning(board, 'red') || Game.checkWinning(board, 'yellow')) {
+        if (Game.checkWinning(board, 'yellow')) return 10000;
+        if (Game.checkWinning(board, 'red')) return -10000;
+        if (Game.isBoardFull(board)) return 0;
+        return Game.scoreBoard(board, 'yellow');
+    }
+
+    if (maximizingPlayer) {
+        let maxEval = -Infinity;
+        for (let col of Game.getValidColumns(board)) {
+            const r = Game.getAvailableRow(board, col);
+            board[r][col] = 'yellow';
+            let evalScore = minimax(board, depth - 1, alpha, beta, false);
+            board[r][col] = null;
+            maxEval = Math.max(maxEval, evalScore);
+            alpha = Math.max(alpha, evalScore);
+            if (beta <= alpha) break;
+        }
+        return maxEval;
+    } else {
+        let minEval = Infinity;
+        for (let col of Game.getValidColumns(board)) {
+            const r = Game.getAvailableRow(board, col);
+            board[r][col] = 'red';
+            let evalScore = minimax(board, depth - 1, alpha, beta, true);
+            board[r][col] = null;
+            minEval = Math.min(minEval, evalScore);
+            beta = Math.min(beta, evalScore);
+            if (beta <= alpha) break;
+        }
+        return minEval;
+    }
+}
+
+// --- Initialization ---
+
+window.setGameMode = setGameMode;
+window.setDifficulty = setDifficulty;
+window.savePlayerNames = savePlayerNames;
+window.startGame = startGame;
+window.resetGame = resetGame;
+window.returnToMain = returnToMain;
+window.returnToMainFromModal = returnToMainFromModal;
+window.playAgain = playAgain;
+
 UI.createBoardUI(boardElement, Game.rows, Game.cols, handleMove);
