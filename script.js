@@ -172,6 +172,7 @@ function handleMove(col) {
 
     board[r][col] = currentPlayer;
     updateBoard(r, col);
+    playDropSound();
 
     if (checkWinBoard(board, r, col, currentPlayer)) {
         const winnerName = currentPlayer === 'red' ? player1Name : player2Name;
@@ -281,6 +282,7 @@ function executeAIMove(col) {
 
     board[r][col] = currentPlayer;
     updateBoard(r, col);
+    playDropSound();
 
     if (checkWinBoard(board, r, col, currentPlayer)) {
         statusElement.innerText = `${player2Name} Wins!`;
