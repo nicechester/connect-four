@@ -79,7 +79,7 @@ export function scoreBoard(board, player) {
     for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
             if (c <= cols - 4) {
-                let window = [board[r][c], board[r][c+1], board[r][c+1], board[r][c+3]];
+                let window = [board[r][c], board[r][c+1], board[r][c+2], board[r][c+3]];
                 score += evaluateWindow(window, player);
             }
             if (r <= rows - 4) {
