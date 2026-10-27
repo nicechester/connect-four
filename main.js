@@ -223,4 +223,5 @@ window.returnToMainFromModal = returnToMainFromModal;
 window.playAgain = playAgain;
 
 UI.createBoardUI(boardElement, Game.rows, Game.cols, handleMove);
+// Initial call to set score text
 updateScoreDisplay();
