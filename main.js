@@ -150,7 +150,9 @@ function updateStatusText() {
 }
 
 function updateScoreDisplay() {
-    scoreElement.textContent = `${player1Name} ${player1Score} vs ${player2Name} ${player2Score}`;
+    if (scoreElement) {
+        scoreElement.textContent = `${player1Name} ${player1Score} vs ${player2Name} ${player2Score}`;
+    }
 }
 
 // --- AI Logic ---
@@ -221,3 +223,4 @@ window.returnToMainFromModal = returnToMainFromModal;
 window.playAgain = playAgain;
 
 UI.createBoardUI(boardElement, Game.rows, Game.cols, handleMove);
+updateScoreDisplay();
