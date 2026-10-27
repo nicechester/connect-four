@@ -11,9 +11,12 @@ let aiThinking = false;
 let aiThinkingInterval = null;
 let player1Name = 'Player 1';
 let player2Name = 'Player 2';
+let player1Score = 0;
+let player2Score = 0;
 
 const boardElement = document.getElementById('game-board');
 const statusElement = document.getElementById('status');
+const scoreElement = document.getElementById('score');
 const difficultyContainer = document.getElementById('ai-difficulty-container');
 const pvpNamesContainer = document.getElementById('pvp-names');
 const pveNamesContainer = document.getElementById('pve-names');
@@ -44,6 +47,9 @@ export function savePlayerNames() {
         player1Name = document.getElementById('player-single-name').value;
         player2Name = 'AI';
     }
+    player1Score = 0;
+    player2Score = 0;
+    updateScoreDisplay();
 }
 
 export function startGame() {
@@ -88,6 +94,12 @@ function handleMove(col) {
     playDropSound();
 
     if (Game.checkWinBoard(board, r, col, currentPlayer)) {
+        if (currentPlayer === 'red') {
+            player1Score++;
+        } else {
+            player2Score++;
+        }
+        updateScoreDisplay();
         const winnerName = currentPlayer === 'red' ? player1Name : player2Name;
         UI.updateStatusText(statusElement, `${winnerName} Wins!`);
         gameOver = true;
@@ -124,7 +136,6 @@ function triggerAIMove() {
 
     setTimeout(() => {
         makeAIMove();
-        // aiThinking = false; // Moved to makeAIMove
         if (aiThinkingInterval) {
             clearInterval(aiThinkingInterval);
             aiThinkingInterval = null;
@@ -136,6 +147,10 @@ function triggerAIMove() {
 function updateStatusText() {
     const activeName = currentPlayer === 'red' ? player1Name : player2Name;
     UI.updateStatusText(statusElement, `${activeName}'s Turn (${currentPlayer === 'red' ? 'Red' : 'Yellow'})`);
+}
+
+function updateScoreDisplay() {
+    scoreElement.textContent = `${player1Name} ${player1Score} vs ${player2Name} ${player2Score}`;
 }
 
 // --- AI Logic ---
