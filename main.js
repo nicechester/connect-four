@@ -150,6 +150,7 @@ function updateStatusText() {
 }
 
 function updateScoreDisplay() {
+    const scoreElement = document.getElementById('score');
     if (scoreElement) {
         scoreElement.textContent = `${player1Name} ${player1Score} vs ${player2Name} ${player2Score}`;
     }
@@ -223,5 +224,4 @@ window.returnToMainFromModal = returnToMainFromModal;
 window.playAgain = playAgain;
 
 UI.createBoardUI(boardElement, Game.rows, Game.cols, handleMove);
-// Initial call to set score text
 updateScoreDisplay();
