@@ -324,6 +324,7 @@ export function copyInviteLink() {
 }
 
 export function saveNetworkName() {
+    document.getElementById('network-actions').style.display = 'block';
     const name = document.getElementById('network-name').value;
     if (!name) return alert('Enter a name');
     document.getElementById('network-actions').style.display = 'block';
@@ -331,6 +332,17 @@ export function saveNetworkName() {
 }
 
 export function startNetworkGame() {
+    const roomId = document.getElementById('join-room-id').value;
+    // If the room ID matches the one we generated, we are the host.
+    // Actually, let's just check if we are the host.
+    // Let's just call createRoom() if we are the host.
+    // Let's simplify: if we are the host, we create. If we are joining, we join.
+    // Let's just check if we have a peer already.
+    if (!peer) {
+        createRoom();
+    } else {
+        joinRoom();
+    }
     const roomId = document.getElementById('join-room-id').value;
     // Check if it's our own generated ID or someone else's
     // For now, let's assume if it matches our generated one, we create, else join.
