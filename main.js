@@ -324,5 +324,5 @@ export function copyInviteLink() {
 export function saveNetworkName() {
     const name = document.getElementById('network-name').value;
     if (!name) return alert('Enter a name');
-    document.getElementById('network-actions').style.display = 'block';
+    createRoom();
 }
