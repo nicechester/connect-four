@@ -248,10 +248,14 @@ export function createRoom() {
         conn = c;
         conn.on('open', () => {
             UI.updateStatusText(statusElement, 'Opponent joined!');
+            conn.send({ type: 'NAME', name: document.getElementById('network-name').value });
         });
         conn.on('data', (data) => {
             if (data.type === 'MOVE') {
                 handleMove(data.col, true);
+            } else if (data.type === 'NAME') {
+                player2Name = data.name;
+                updateScoreDisplay();
             }
         });
     });
@@ -268,10 +272,14 @@ export function joinRoom() {
         conn = peer.connect(roomId);
         conn.on('open', () => {
             UI.updateStatusText(statusElement, 'Connected to host!');
+            conn.send({ type: 'NAME', name: document.getElementById('network-name').value });
         });
         conn.on('data', (data) => {
             if (data.type === 'MOVE') {
                 handleMove(data.col, true);
+            } else if (data.type === 'NAME') {
+                player2Name = data.name;
+                updateScoreDisplay();
             }
         });
     });
