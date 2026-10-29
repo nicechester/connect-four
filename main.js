@@ -241,6 +241,7 @@ window.returnToMainFromModal = returnToMainFromModal;
 window.playAgain = playAgain;
 window.createRoom = createRoom;
 window.joinRoom = joinRoom;
+window.saveNetworkName = saveNetworkName;
 window.copyInviteLink = copyInviteLink;
 
 UI.createBoardUI(boardElement, Game.rows, Game.cols, handleMove);
@@ -250,7 +251,7 @@ export function createRoom() {
     const name = document.getElementById('network-name').value;
     if (!name) return alert('Enter a name');
     const roomId = Network.generateRoomId();
-    document.getElementById('initial-network-controls').style.display = 'none';
+    document.getElementById('network-actions').style.display = 'none';
     document.getElementById('display-room-id').textContent = roomId;
     peer = new Peer(roomId);
     isHost = true;
@@ -318,4 +319,10 @@ export function copyInviteLink() {
     const roomId = document.getElementById('display-room-id').textContent;
     const url = window.location.origin + window.location.pathname + '?room=' + roomId;
     navigator.clipboard.writeText(url).then(() => alert('Invite link copied!'));
+}
+
+export function saveNetworkName() {
+    const name = document.getElementById('network-name').value;
+    if (!name) return alert('Enter a name');
+    document.getElementById('network-actions').style.display = 'block';
 }
