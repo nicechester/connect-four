@@ -323,24 +323,27 @@ export function copyInviteLink() {
     navigator.clipboard.writeText(url).then(() => alert('Invite link copied!'));
 }
 
+
 export function saveNetworkName() {
-    document.getElementById('network-actions').style.display = 'block';
     const name = document.getElementById('network-name').value;
     if (!name) return alert('Enter a name');
     document.getElementById('network-actions').style.display = 'block';
     document.getElementById('join-room-id').value = Network.generateRoomId();
 }
 
+
+
 export function startNetworkGame() {
     const roomId = document.getElementById('join-room-id').value;
-    // If the room ID matches the one we generated, we are the host.
-    // Actually, let's just check if we are the host.
-    // Let's just call createRoom() if we are the host.
-    // Let's simplify: if we are the host, we create. If we are joining, we join.
-    // Let's just check if we have a peer already.
-    if (!peer) {
+    const generatedId = document.getElementById('display-room-id').textContent;
+    
+    if (generatedId && roomId === generatedId) {
         createRoom();
     } else {
+        joinRoom();
+    }
+}
+ else {
         joinRoom();
     }
     const roomId = document.getElementById('join-room-id').value;
