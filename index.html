@@ -31,6 +31,7 @@
                 </select>
             </div>
         </div>
+        <button id="start-game-btn" onclick="startGame()">Start Game</button>
         <div id="player-names-container">
             <div id="pvp-names" class="name-inputs">
                 <label>Player 1 (Red): <input type="text" id="player1-name" value="Player 1" /></label>
@@ -44,12 +45,17 @@
             <div id="network-names" class="name-inputs" style="display: none;">
                 <label>Your Name: <input type="text" id="network-name" /></label>
                 <button onclick="createRoom()">Create Room</button>
+                <div id="room-controls" style="display: none;">
+                    <p>Room ID: <span id="display-room-id"></span></p>
+                    <button onclick="copyInviteLink()">Invite Friend</button>
+                    <button onclick="startGame()">Start Game</button>
+                </div>
                 <hr>
                 <label>Room ID: <input type="text" id="join-room-id" placeholder="Enter 5-char ID" /></label>
                 <button onclick="joinRoom()">Join Room</button>
             </div>
         </div>
-        <button id="start-game-btn" onclick="startGame()">Start Game</button>
+        
     </div>
 
     <!-- Game Screen -->

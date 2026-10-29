@@ -35,6 +35,7 @@ export function setGameMode(mode) {
     pvpNamesContainer.style.display = mode === 'pvp' ? 'block' : 'none';
     pveNamesContainer.style.display = mode === 'pve' ? 'block' : 'none';
     document.getElementById('network-names').style.display = mode === 'network' ? 'block' : 'none';
+    document.getElementById('start-game-btn').style.display = mode === 'network' ? 'none' : 'block';
 }
 
 export function setDifficulty() {
@@ -226,6 +227,7 @@ window.returnToMainFromModal = returnToMainFromModal;
 window.playAgain = playAgain;
 window.createRoom = createRoom;
 window.joinRoom = joinRoom;
+window.copyInviteLink = copyInviteLink;
 
 UI.createBoardUI(boardElement, Game.rows, Game.cols, handleMove);
 updateScoreDisplay();
@@ -234,8 +236,9 @@ export function createRoom() {
     const name = document.getElementById('network-name').value;
     if (!name) return alert('Enter a name');
     const roomId = Network.generateRoomId();
-    // TODO: PeerJS logic
-    alert('Room created: ' + roomId);
+    document.getElementById('display-room-id').textContent = roomId;
+    document.getElementById('room-controls').style.display = 'block';
+    document.getElementById('start-game-btn').style.display = 'none';
 }
 
 export function joinRoom() {
@@ -244,4 +247,10 @@ export function joinRoom() {
     if (!name || !Network.isValidRoomId(roomId)) return alert('Enter name and valid room ID');
     // TODO: PeerJS logic
     alert('Joining room: ' + roomId);
+}
+
+export function copyInviteLink() {
+    const roomId = document.getElementById('display-room-id').textContent;
+    const url = window.location.origin + window.location.pathname + '?room=' + roomId;
+    navigator.clipboard.writeText(url).then(() => alert('Invite link copied!'));
 }
