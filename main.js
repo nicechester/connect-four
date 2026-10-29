@@ -252,6 +252,7 @@ export function createRoom() {
         conn.on('open', () => {
             UI.updateStatusText(statusElement, 'Opponent joined!');
             conn.send({ type: 'NAME', name: document.getElementById('network-name').value });
+            conn.send({ type: 'STATE', board: board, currentPlayer: currentPlayer });
         });
         conn.on('data', (data) => {
             if (data.type === 'MOVE') {
@@ -259,6 +260,11 @@ export function createRoom() {
             } else if (data.type === 'NAME') {
                 player2Name = data.name;
                 updateScoreDisplay();
+            } else if (data.type === 'STATE') {
+                board = data.board;
+                currentPlayer = data.currentPlayer;
+                UI.updateBoardUI(board, -1, -1);
+                updateStatusText();
             }
         });
     });
@@ -283,6 +289,11 @@ export function joinRoom() {
             } else if (data.type === 'NAME') {
                 player2Name = data.name;
                 updateScoreDisplay();
+            } else if (data.type === 'STATE') {
+                board = data.board;
+                currentPlayer = data.currentPlayer;
+                UI.updateBoardUI(board, -1, -1);
+                updateStatusText();
             }
         });
     });
