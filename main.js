@@ -242,6 +242,7 @@ window.playAgain = playAgain;
 window.createRoom = createRoom;
 window.joinRoom = joinRoom;
 window.saveNetworkName = saveNetworkName;
+window.startNetworkGame = startNetworkGame;
 window.copyInviteLink = copyInviteLink;
 
 UI.createBoardUI(boardElement, Game.rows, Game.cols, handleMove);
@@ -324,5 +325,14 @@ export function copyInviteLink() {
 export function saveNetworkName() {
     const name = document.getElementById('network-name').value;
     if (!name) return alert('Enter a name');
-    createRoom();
+    document.getElementById('network-actions').style.display = 'block';
+}
+
+export function startNetworkGame() {
+    const roomId = document.getElementById('join-room-id').value;
+    if (roomId) {
+        joinRoom();
+    } else {
+        document.getElementById('network-actions').style.display = 'block';
+    }
 }
