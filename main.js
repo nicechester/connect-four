@@ -90,7 +90,7 @@ export function playAgain() {
 
 // --- Move Handling ---
 
-function handleMove(col) {
+function handleMove(col, isRemote = false) {
     if (gameOver || aiThinking) return;
     const r = Game.getAvailableRow(board, col);
     if (r === -1) return;
@@ -98,6 +98,9 @@ function handleMove(col) {
     board[r][col] = currentPlayer;
     UI.updateBoardUI(board, r, col);
     playDropSound();
+    if (!isRemote && conn && conn.open) {
+        conn.send({ type: 'MOVE', col: col });
+    }
 
     if (Game.checkWinBoard(board, r, col, currentPlayer)) {
         if (currentPlayer === 'red') {
@@ -246,6 +249,11 @@ export function createRoom() {
         conn.on('open', () => {
             UI.updateStatusText(statusElement, 'Opponent joined!');
         });
+        conn.on('data', (data) => {
+            if (data.type === 'MOVE') {
+                handleMove(data.col, true);
+            }
+        });
     });
     document.getElementById('room-controls').style.display = 'block';
     document.getElementById('start-game-btn').style.display = 'none';
@@ -260,6 +268,11 @@ export function joinRoom() {
         conn = peer.connect(roomId);
         conn.on('open', () => {
             UI.updateStatusText(statusElement, 'Connected to host!');
+        });
+        conn.on('data', (data) => {
+            if (data.type === 'MOVE') {
+                handleMove(data.col, true);
+            }
         });
     });
 }
