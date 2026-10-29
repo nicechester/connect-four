@@ -1,5 +1,6 @@
 import * as Game from './game.js';
 import * as UI from './ui.js';
+import * as Network from './network.js';
 import { playDropSound } from './sound.js';
 
 let board = Game.createEmptyBoard();
@@ -33,6 +34,7 @@ export function setGameMode(mode) {
     difficultyContainer.style.display = mode === 'pve' ? 'inline-block' : 'none';
     pvpNamesContainer.style.display = mode === 'pvp' ? 'block' : 'none';
     pveNamesContainer.style.display = mode === 'pve' ? 'block' : 'none';
+    document.getElementById('network-names').style.display = mode === 'network' ? 'block' : 'none';
 }
 
 export function setDifficulty() {
@@ -222,6 +224,24 @@ window.resetGame = resetGame;
 window.returnToMain = returnToMain;
 window.returnToMainFromModal = returnToMainFromModal;
 window.playAgain = playAgain;
+window.createRoom = createRoom;
+window.joinRoom = joinRoom;
 
 UI.createBoardUI(boardElement, Game.rows, Game.cols, handleMove);
 updateScoreDisplay();
+
+export function createRoom() {
+    const name = document.getElementById('network-name').value;
+    if (!name) return alert('Enter a name');
+    const roomId = Network.generateRoomId();
+    // TODO: PeerJS logic
+    alert('Room created: ' + roomId);
+}
+
+export function joinRoom() {
+    const name = document.getElementById('network-name').value;
+    const roomId = document.getElementById('join-room-id').value;
+    if (!name || !Network.isValidRoomId(roomId)) return alert('Enter name and valid room ID');
+    // TODO: PeerJS logic
+    alert('Joining room: ' + roomId);
+}
