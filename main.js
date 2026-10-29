@@ -333,6 +333,87 @@ export function saveNetworkName() {
 
 
 
+
+export function createRoom() {
+    const name = document.getElementById('network-name').value;
+    if (!name) return alert('Enter a name');
+    const roomId = Network.generateRoomId();
+    document.getElementById('network-actions').style.display = 'none';
+    document.getElementById('room-controls').style.display = 'block';
+    document.getElementById('display-room-id').textContent = roomId;
+    peer = new Peer(roomId);
+    isHost = true;
+    peer.on('connection', (c) => {
+        conn = c;
+        conn.on('open', () => {
+            UI.updateStatusText(statusElement, 'Opponent joined!');
+            conn.send({ type: 'NAME', name: document.getElementById('network-name').value });
+            conn.send({ type: 'STATE', board: board, currentPlayer: currentPlayer });
+        });
+        conn.on('data', (data) => {
+            if (data.type === 'MOVE') {
+                handleMove(data.col, true);
+            } else if (data.type === 'NAME') {
+                player2Name = data.name;
+                updateScoreDisplay();
+            } else if (data.type === 'RESET') {
+                resetGame(true);
+            } else if (data.type === 'PLAY_AGAIN') {
+                playAgain(true);
+            } else if (data.type === 'STATE') {
+                board = data.board;
+                currentPlayer = data.currentPlayer;
+                UI.updateBoardUI(board, -1, -1);
+                updateStatusText();
+            }
+        });
+    });
+}
+
+export function joinRoom() {
+    const name = document.getElementById('network-name').value;
+    const roomId = document.getElementById('join-room-id').value;
+    if (!name || !Network.isValidRoomId(roomId)) return alert('Enter name and valid room ID');
+    peer = new Peer();
+    peer.on('open', () => {
+        conn = peer.connect(roomId);
+        conn.on('open', () => {
+            UI.updateStatusText(statusElement, 'Connected to host!');
+            conn.send({ type: 'NAME', name: document.getElementById('network-name').value });
+        });
+        conn.on('data', (data) => {
+            if (data.type === 'MOVE') {
+                handleMove(data.col, true);
+            } else if (data.type === 'NAME') {
+                player2Name = data.name;
+                updateScoreDisplay();
+            } else if (data.type === 'RESET') {
+                resetGame(true);
+            } else if (data.type === 'PLAY_AGAIN') {
+                playAgain(true);
+            } else if (data.type === 'STATE') {
+                board = data.board;
+                currentPlayer = data.currentPlayer;
+                UI.updateBoardUI(board, -1, -1);
+                updateStatusText();
+            }
+        });
+    });
+}
+
+export function copyInviteLink() {
+    const roomId = document.getElementById('display-room-id').textContent;
+    const url = window.location.origin + window.location.pathname + '?room=' + roomId;
+    navigator.clipboard.writeText(url).then(() => alert('Invite link copied!'));
+}
+
+export function saveNetworkName() {
+    const name = document.getElementById('network-name').value;
+    if (!name) return alert('Enter a name');
+    document.getElementById('network-actions').style.display = 'block';
+    document.getElementById('join-room-id').value = Network.generateRoomId();
+}
+
 export function startNetworkGame() {
     const roomId = document.getElementById('join-room-id').value;
     const generatedId = document.getElementById('display-room-id').textContent;
@@ -341,34 +422,5 @@ export function startNetworkGame() {
         createRoom();
     } else {
         joinRoom();
-    }
-}
- else {
-        joinRoom();
-    }
-    const roomId = document.getElementById('join-room-id').value;
-    // Check if it's our own generated ID or someone else's
-    // For now, let's assume if it matches our generated one, we create, else join.
-    // Actually, let's just check if the room exists or just create/join based on logic.
-    // Simplest: if we created it, we are host. If we joined, we are guest.
-    // Let's just create if it's the one we generated, or join if it's different.
-    // Actually, let's just use createRoom() if we are the host.
-    // Let's simplify: just call createRoom() if we are creating, joinRoom() if we are joining.
-    // Let's add a flag or just check if we are the host.
-    // Let's just create the room if we are the one who generated it.
-    // Actually, let's just call createRoom() and if it fails, joinRoom().
-    // Let's just use a simple check.
-    const generatedId = document.getElementById('display-room-id').textContent;
-    if (roomId === generatedId || !roomId) {
-        createRoom();
-    } else {
-        joinRoom();
-    }
-    const roomId = document.getElementById('join-room-id').value;
-    if (roomId) {
-        joinRoom();
-    } else {
-        document.getElementById('network-actions').style.display = 'block';
-    document.getElementById('join-room-id').value = Network.generateRoomId();
     }
 }
