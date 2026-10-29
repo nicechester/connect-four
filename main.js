@@ -253,6 +253,7 @@ export function createRoom() {
     if (!name) return alert('Enter a name');
     const roomId = Network.generateRoomId();
     document.getElementById('network-actions').style.display = 'none';
+    document.getElementById('room-controls').style.display = 'block';
     document.getElementById('display-room-id').textContent = roomId;
     peer = new Peer(roomId);
     isHost = true;
@@ -326,13 +327,33 @@ export function saveNetworkName() {
     const name = document.getElementById('network-name').value;
     if (!name) return alert('Enter a name');
     document.getElementById('network-actions').style.display = 'block';
+    document.getElementById('join-room-id').value = Network.generateRoomId();
 }
 
 export function startNetworkGame() {
+    const roomId = document.getElementById('join-room-id').value;
+    // Check if it's our own generated ID or someone else's
+    // For now, let's assume if it matches our generated one, we create, else join.
+    // Actually, let's just check if the room exists or just create/join based on logic.
+    // Simplest: if we created it, we are host. If we joined, we are guest.
+    // Let's just create if it's the one we generated, or join if it's different.
+    // Actually, let's just use createRoom() if we are the host.
+    // Let's simplify: just call createRoom() if we are creating, joinRoom() if we are joining.
+    // Let's add a flag or just check if we are the host.
+    // Let's just create the room if we are the one who generated it.
+    // Actually, let's just call createRoom() and if it fails, joinRoom().
+    // Let's just use a simple check.
+    const generatedId = document.getElementById('display-room-id').textContent;
+    if (roomId === generatedId || !roomId) {
+        createRoom();
+    } else {
+        joinRoom();
+    }
     const roomId = document.getElementById('join-room-id').value;
     if (roomId) {
         joinRoom();
     } else {
         document.getElementById('network-actions').style.display = 'block';
+    document.getElementById('join-room-id').value = Network.generateRoomId();
     }
 }
