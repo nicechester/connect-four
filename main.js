@@ -14,6 +14,9 @@ let player1Name = 'Player 1';
 let player2Name = 'Player 2';
 let player1Score = 0;
 let player2Score = 0;
+let peer = null;
+let conn = null;
+
 
 const boardElement = document.getElementById('game-board');
 const statusElement = document.getElementById('status');
@@ -237,6 +240,13 @@ export function createRoom() {
     if (!name) return alert('Enter a name');
     const roomId = Network.generateRoomId();
     document.getElementById('display-room-id').textContent = roomId;
+    peer = new Peer(roomId);
+    peer.on('connection', (c) => {
+        conn = c;
+        conn.on('open', () => {
+            UI.updateStatusText(statusElement, 'Opponent joined!');
+        });
+    });
     document.getElementById('room-controls').style.display = 'block';
     document.getElementById('start-game-btn').style.display = 'none';
 }
@@ -245,8 +255,13 @@ export function joinRoom() {
     const name = document.getElementById('network-name').value;
     const roomId = document.getElementById('join-room-id').value;
     if (!name || !Network.isValidRoomId(roomId)) return alert('Enter name and valid room ID');
-    // TODO: PeerJS logic
-    alert('Joining room: ' + roomId);
+    peer = new Peer();
+    peer.on('open', () => {
+        conn = peer.connect(roomId);
+        conn.on('open', () => {
+            UI.updateStatusText(statusElement, 'Connected to host!');
+        });
+    });
 }
 
 export function copyInviteLink() {
