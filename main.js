@@ -66,7 +66,10 @@ export function startGame() {
     resetGame();
 }
 
-export function resetGame() {
+export function resetGame(isRemote = false) {
+    if (!isRemote && conn && conn.open) {
+        conn.send({ type: 'RESET' });
+    }
     board = Game.createEmptyBoard();
     currentPlayer = 'red';
     gameOver = false;
@@ -85,7 +88,10 @@ export function returnToMainFromModal() {
     returnToMain();
 }
 
-export function playAgain() {
+export function playAgain(isRemote = false) {
+    if (!isRemote && conn && conn.open) {
+        conn.send({ type: 'PLAY_AGAIN' });
+    }
     resetGame();
 }
 
@@ -260,6 +266,10 @@ export function createRoom() {
             } else if (data.type === 'NAME') {
                 player2Name = data.name;
                 updateScoreDisplay();
+            } else if (data.type === 'RESET') {
+                resetGame(true);
+            } else if (data.type === 'PLAY_AGAIN') {
+                playAgain(true);
             } else if (data.type === 'STATE') {
                 board = data.board;
                 currentPlayer = data.currentPlayer;
@@ -289,6 +299,10 @@ export function joinRoom() {
             } else if (data.type === 'NAME') {
                 player2Name = data.name;
                 updateScoreDisplay();
+            } else if (data.type === 'RESET') {
+                resetGame(true);
+            } else if (data.type === 'PLAY_AGAIN') {
+                playAgain(true);
             } else if (data.type === 'STATE') {
                 board = data.board;
                 currentPlayer = data.currentPlayer;
