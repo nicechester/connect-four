@@ -250,6 +250,7 @@ export function createRoom() {
     const name = document.getElementById('network-name').value;
     if (!name) return alert('Enter a name');
     const roomId = Network.generateRoomId();
+    document.getElementById('initial-network-controls').style.display = 'none';
     document.getElementById('display-room-id').textContent = roomId;
     peer = new Peer(roomId);
     isHost = true;
