@@ -16,6 +16,7 @@ let player1Score = 0;
 let player2Score = 0;
 let peer = null;
 let conn = null;
+let isHost = false;
 
 
 const boardElement = document.getElementById('game-board');
@@ -91,6 +92,7 @@ export function playAgain() {
 // --- Move Handling ---
 
 function handleMove(col, isRemote = false) {
+    if (!isRemote && ((isHost && currentPlayer !== 'red') || (!isHost && currentPlayer !== 'yellow'))) return;
     if (gameOver || aiThinking) return;
     const r = Game.getAvailableRow(board, col);
     if (r === -1) return;
@@ -244,6 +246,7 @@ export function createRoom() {
     const roomId = Network.generateRoomId();
     document.getElementById('display-room-id').textContent = roomId;
     peer = new Peer(roomId);
+    isHost = true;
     peer.on('connection', (c) => {
         conn = c;
         conn.on('open', () => {
